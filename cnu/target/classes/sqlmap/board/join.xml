@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="board">
+	
+	<select id="main" resultType="kr.or.cnu.vo.BoardVO" parameterType="kr.or.cnu.vo.PagingVO">
+		SELECT a.*
+		FROM
+		(SELECT ROWNUM RNUM, A.*
+		FROM
+		(   SELECT *
+		    FROM CNU_BOARD
+		    <if test="searchKeyword!=null">
+		    WHERE ${search} LIKE '%' || #{searchKeyword} || '%'
+		    </if>
+		    ORDER BY BOARD_NO DESC  ) A ) a
+		WHERE RNUM BETWEEN #{start} AND #{end}
+	</select>	
+	
+	<select id="total" resultType="int" parameterType="kr.or.cnu.vo.PagingVO">
+		SELECT COUNT(*)
+		FROM CNU_BOARD
+		<if test="searchKeyword!=null">
+			WHERE ${search} LIKE '%' || #{searchKeyword} || '%'
+		</if>
+	</select>
+	
+	
+	<select id="detail" parameterType="String" resultType="kr.or.cnu.vo.BoardVO">
+		SELECT *
+		FROM CNU_BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<insert id="commentInsert" parameterType="HashMap">
+		INSERT INTO CNU_COMMENT (COMMENT_NO
+                        ,CONTENT
+                        ,WRITER
+                        ,REGDATE
+                        ,BOARD_NO) VALUES ( 'COM' || COMMNET_SEQ.NEXTVAL
+                                            , #{comment}
+                                            , #{writer}
+                                            , SYSDATE
+                                            , #{boardNo} )
+	</insert>
+	
+</mapper>
