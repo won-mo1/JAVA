@@ -1,9 +1,14 @@
 package kr.or.cnu.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.or.cnu.service.BoardService;
+import kr.or.cnu.vo.AtchFileVO;
 import kr.or.cnu.vo.BoardVO;
 import kr.or.cnu.vo.PagingVO;
 
@@ -114,27 +120,76 @@ public class BoardController {
 	}
 	
 	@PostMapping("/boardInsert.do")
-	public String boardInsertPost(MultipartFile[]uploadFile, MultipartHttpServletRequest req) {
-		System.out.println("여기가들어와야함");
-		System.out.println("길이 : " + uploadFile.length);
-		System.out.println(req.getFileNames());
-		Iterator<String> itr =  req.getFileNames();
+	public String boardInsertPost(MultipartFile[]uploadFile) {
 		
-		while(itr.hasNext()) {
-			 MultipartFile mpf = req.getFile(itr.next());
-	         String originFileName = mpf.getOriginalFilename();
-	         System.out.println("FILE_INFO: "+originFileName);
-		}
-		
-		for(MultipartFile upload : uploadFile) {
-			System.out.println("파일이름 : " + upload.getName());
-			System.out.println("원본파일이름 : " + upload.getOriginalFilename());
-			System.out.println("파일사이즈 : " + upload.getSize());
-		}
+		String atchFileCd = fileUpload(uploadFile);
+		System.out.println("파일번호 : " + atchFileCd);
 		
 		return "";
 	}
 	
+	
+	public String fileUpload(MultipartFile[]uploadFile) {
+		
+		String atchFileNo = boardService.atchFileNo();
+		
+		int forIndex = 0;
+		for(MultipartFile upload : uploadFile) {
+			AtchFileVO fileVo = new AtchFileVO();
+			
+			UUID uuid = UUID.randomUUID();
+			int sn = forIndex;	//순번
+			String orignAtchFileNm = upload.getOriginalFilename(); //원본파일이름
+			String atchFileNm = uuid + "-" + upload.getOriginalFilename(); //저장파일이름
+			long atchFileSize = upload.getSize();	//파일사이즈
+			//확장자
+			int index = upload.getOriginalFilename().split("\\.").length;
+			String extsn = upload.getOriginalFilename().split("\\.")[index-1]; //확장자
+			
+			fileVo.setAtchFileNo(atchFileNo);
+			fileVo.setSn(forIndex);
+			fileVo.setAtchFileNm(atchFileNm);
+			fileVo.setOrignAtchFileNm(orignAtchFileNm);
+			fileVo.setAtchFileSize(atchFileSize);
+			fileVo.setExtsn(extsn);
+			fileVo.setAtchFile("");
+			
+			File file = new File(getFolder(), upload.getOriginalFilename());
+			
+			boardService.atchFile(fileVo);
+			
+			try {
+				upload.transferTo(file);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			
+			forIndex++;
+		}
+		
+		return atchFileNo;
+	}
+	
+	
+	public String getFolder() {
+		
+		Date now = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy\\MM\\dd\\");
+		String nowFolder = format.format(now);
+		String path = "D:\\" + nowFolder;
+		
+		File file = new File(path);
+		
+		if(!file.exists()) {
+			try{
+				file.mkdirs();
+			}catch (Exception e) {
+				e.getStackTrace();
+			}
+		}
+		
+		return path;
+	}
 	
 
 }

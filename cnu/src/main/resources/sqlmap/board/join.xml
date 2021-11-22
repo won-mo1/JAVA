@@ -50,4 +50,28 @@
                                             , #{boardNo} )
 	</insert>
 	
+	<select id="atchFileNo" resultType="String">
+		SELECT 'FILE' || ATCH_FILE_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<insert id="atchFile" parameterType="kr.or.cnu.vo.AtchFileVO">
+		INSERT INTO cnu_atch_file (
+									    ATCH_FILE_NO,
+									    SN,
+									    ATCH_FILE_NM,
+									    ORIGN_ATCH_FILE_NM,
+									    ATCH_FILE_SIZE,
+									    EXTSN,
+									    ATCH_FILE
+													) VALUES (
+													    #{atchFileNo}
+													    , #{sn}
+													    , #{atchFileNm}
+													    , #{orignAtchFileNm}
+													    , #{atchFileSize}
+													    , #{extsn}
+													    , #{atchFile}
+													)
+	</insert>
 </mapper>

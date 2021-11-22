@@ -3,10 +3,20 @@ package kr.or.cnu.controller;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 
 public class Test {
 	public static void main(String[] args) {
+		
+		String name = "PJ8.sql";
+		int index = name.split("\\.").length;
+		System.out.println(index);
+		String last = name.split("[.]")[index-1];  
+		System.out.println(last);
+		UUID uuid = UUID.randomUUID();
+		System.out.println(uuid +"-"+ name);
+		System.out.println(uuid +"-"+ name);
 		
 		LocalDate now = LocalDate.now();
 		

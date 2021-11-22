@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.or.cnu.dao.BoardDao;
+import kr.or.cnu.vo.AtchFileVO;
 import kr.or.cnu.vo.BoardVO;
 import kr.or.cnu.vo.PagingVO;
 
@@ -32,6 +33,16 @@ public class BoardService {
 
 	public int commentInsert(Map<String, Object> map) {
 		return boardDao.commentInsert(map);
+	}
+
+	public String atchFileNo() {
+		// TODO Auto-generated method stub
+		return boardDao.atchFileNo();
+	}
+
+	public void atchFile(AtchFileVO fileVo) {
+		boardDao.atchFile(fileVo);
+		
 	}
 
 }
