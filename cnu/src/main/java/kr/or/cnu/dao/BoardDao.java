@@ -47,5 +47,15 @@ public class BoardDao {
 		sessionTemplate.insert("board.atchFile", fileVo);
 		
 	}
+
+	public List<Map<String, Object>> commentList(String boardNo) {
+		// TODO Auto-generated method stub
+		return sessionTemplate.selectList("board.commentList", boardNo);
+	}
+
+	public int commentDelete(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sessionTemplate.delete("board.commentDelete", map);
+	}
 	
 }

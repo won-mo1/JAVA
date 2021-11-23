@@ -94,7 +94,9 @@ public class BoardController {
 
 		BoardVO boardVo = boardService.boardDetail(boardNo); // 작성후 생성해주면됨
 		model.addAttribute("boardVo", boardVo);
-
+		List<Map<String, Object>> commentList = boardService.commentList(boardNo);
+		model.addAttribute("commentList", commentList);
+		
 		return "board/boardDetail";
 
 	}
@@ -191,5 +193,16 @@ public class BoardController {
 		return path;
 	}
 	
-
+	@ResponseBody
+	@PostMapping("/commentDelete.do")
+	public String commentDelete(@RequestParam Map<String, Object> map) {
+		
+		int cnt = boardService.commentDelete(map);
+		if(cnt > 0) {
+			return "ok";
+		}else {
+			return "fail";
+		}
+	}
+	
 }

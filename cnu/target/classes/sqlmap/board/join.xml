@@ -74,4 +74,13 @@
 													    , #{atchFile}
 													)
 	</insert>
+	
+	<select id="commentList" parameterType="String" resultType="HashMap">
+		SELECT * FROM CNU_COMMENT WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<delete id="commentDelete" parameterType="HashMap">
+		DELETE FROM CNU_COMMENT WHERE COMMENT_NO = #{commentNo}
+	</delete>
+	
 </mapper>

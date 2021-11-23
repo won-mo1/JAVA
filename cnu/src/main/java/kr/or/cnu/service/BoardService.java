@@ -45,4 +45,14 @@ public class BoardService {
 		
 	}
 
+	public List<Map<String, Object>> commentList(String boardNo) {
+		// TODO Auto-generated method stub
+		return boardDao.commentList(boardNo);
+	}
+
+	public int commentDelete(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return boardDao.commentDelete(map);
+	}
+
 }

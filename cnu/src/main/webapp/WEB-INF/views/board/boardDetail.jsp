@@ -48,6 +48,23 @@
 		
 	}
 	
+	function commentDelete(cmtNo){
+		var delConfirm = confirm('삭제하시겠습니까?');
+		if(delConfirm){
+			$.ajax({
+				url : "/cnu/commentDelete.do"
+				, type : "post"
+				, data : { commentNo : cmtNo }
+				, success : function(data){
+					if(data=="ok"){
+						location.reload();
+					}
+				}
+				
+			});	
+		}
+		
+	}
 </script>
 </head>
 <body>
@@ -87,7 +104,14 @@
 			<th>작성일</th>
 			<th>삭제</th>
 		</tr>
-		
+		<c:forEach items="${commentList}" var="commentList">
+			<tr>
+				<td>${commentList.WRITER }</td>
+				<td>${commentList.CONTENT }</td>
+				<td>${commentList.REGDATE }</td>
+				<td><button onclick="commentDelete('${commentList.COMMENT_NO}')">삭제</button></td>
+			</tr>
+		</c:forEach>
 	</table>
 	
 	<table border="1">
