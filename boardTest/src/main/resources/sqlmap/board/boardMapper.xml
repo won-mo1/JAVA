@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.or.board.mapper.BoardMapper">
+	<select id="boardList" resultType="kr.or.board.vo.BoardVO" parameterType="kr.or.board.vo.PagingVO">
+		SELECT AA.*
+		FROM
+		    (SELECT A.*, ROWNUM RNUM
+		    FROM
+		        (SELECT        BOARD_NO
+		                       ,BOARD_TITLE
+		                       ,REGDATE
+		                       ,HIT
+		                       ,CONTENT
+		                       ,WRITER 
+		        FROM CNU_BOARD
+		        <if test="searchFlag != null and searchFlag != ''">
+					WHERE ${searchFlag} LIKE '%${searchKeyword}%'
+				</if>
+		        ORDER BY BOARD_NO DESC)A ) AA
+		WHERE AA.RNUM BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="getTotal" parameterType="kr.or.board.vo.PagingVO" resultType="int">
+		SELECT COUNT(*)
+		FROM CNU_BOARD
+		<if test="searchFlag != null and searchFlag != ''">
+			WHERE ${searchFlag} LIKE '%'|| #{searchKeyword} ||'%'
+		</if>
+	</select>
+	
+</mapper>  
