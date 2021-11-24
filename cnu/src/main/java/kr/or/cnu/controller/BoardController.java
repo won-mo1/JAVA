@@ -122,13 +122,52 @@ public class BoardController {
 	}
 	
 	@PostMapping("/boardInsert.do")
-	public String boardInsertPost(MultipartFile[]uploadFile) {
+	public String boardInsertPost(MultipartFile []uploadFile) {
 		
-		String atchFileCd = fileUpload(uploadFile);
-		System.out.println("파일번호 : " + atchFileCd);
+			//경로 만들기
+			Date now = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yyyy\\MM\\dd\\");
+			String nowFolder = format.format(now);
+			String path = "D:\\" + nowFolder;
+			
+			File file = new File(path); //디렉토리(폴더)
+			
+			
+			if(!file.exists()) {
+				file.mkdirs();
+			}
 		
+			for(MultipartFile upload : uploadFile) {
+				UUID uuid = UUID.randomUUID();
+				String atchFileNm = uuid + "-" + upload.getOriginalFilename();
+				
+				//데이터베이스에 넣을 파일에대한 정보들 (+경로, 확장자, 저장이름, 순번)
+				System.out.println(upload.getOriginalFilename()); //파일이름
+				System.out.println(upload.getSize());  //파일용량
+				
+				File saveFile = new File(path, atchFileNm);
+				
+				try {
+					upload.transferTo(saveFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+				
+			}
+			
+			
 		return "";
 	}
+	
+	
+//	@PostMapping("/boardInsert.do")
+//	public String boardInsertPost(MultipartFile[]uploadFile) {
+//		
+//		String atchFileCd = fileUpload(uploadFile);
+//		System.out.println("파일번호 : " + atchFileCd);
+//		
+//		return "";
+//	}
 	
 	
 	public String fileUpload(MultipartFile[]uploadFile) {

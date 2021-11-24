@@ -31,6 +31,8 @@
 			<file-size-threshold>20971520</file-size-threshold> <!-- 메모리 사용 20MB -->
 		</multipart-config>
 		
+		
+		
 	</servlet>
 		
 	<servlet-mapping>

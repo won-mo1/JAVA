@@ -44,7 +44,13 @@
 		<table> 안에 <tr>을 반복해주면됨
 		-->
 	<div class="body">
-		<div>
+		
+		<div style="float: left;">
+			<button onclick="location.href='/cnu/boardInsert.do'">등록하기</button>
+		</div>
+	
+	
+		<div style="float: right;">
 			<form>
 				<select name="search">
 					<option value="BOARD_TITLE">제목</option>
