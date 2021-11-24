@@ -34,4 +34,80 @@
 		</if>
 	</select>
 	
+	<select id="getAtchFileNo" resultType="String">
+		SELECT 'FILE' || ATCH_FILE_SEQ.NEXTVAL
+		FROM DUAL
+	</select>
+	
+	<insert id="atchFileUpload" parameterType="kr.or.board.vo.AtchFileVO">
+		INSERT INTO CNU_ATCH_FILE ( ATCH_FILE_NO
+									,SN
+									,ATCH_FILE_NM
+									,ORIGN_ATCH_FILE_NM
+									,ATCH_FILE_SIZE
+									,EXTSN
+									,ATCH_FILE) VALUES (  #{atchFileNo}
+														  ,#{sn}
+														  ,#{atchFileNm}
+														  ,#{orignAtchFileNm}
+														  ,#{atchFileSize}
+														  ,#{extsn}
+														  ,#{atchFile}
+					 													)
+	</insert>
+	
+	<insert id="boardInsert" parameterType="kr.or.board.vo.BoardVO">
+		INSERT INTO CNU_BOARD ( BOARD_NO
+								,BOARD_TITLE
+								,REGDATE
+								,HIT
+								,CONTENT
+								,WRITER
+								,ATCH_FILE_NO ) VALUES ( (SELECT NVL(MAX(BOARD_NO),0)+1 FROM CNU_BOARD) 
+														 , #{boardTitle}
+														 , SYSDATE
+														 , 0
+														 , #{content}
+														 , #{writer}
+														 , #{atchFileNo} )
+	</insert>
+	
+	<select id="boardDetail" parameterType="String" resultType="kr.or.board.vo.BoardVO">
+		SELECT *
+		FROM CNU_BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</select>
+	
+	<select id="fileDetail" parameterType="String" resultType="kr.or.board.vo.AtchFileVO">
+		SELECT *
+		FROM CNU_ATCH_FILE
+		WHERE ATCH_FILE_NO = #{atchFileNo}
+		ORDER BY SN ASC
+	</select>
+	
+	<insert id="commentInsert" parameterType="hashMap">
+		<selectKey keyProperty="commentNo" resultType="java.lang.String" order="BEFORE">
+			SELECT 'COM' || COMMNET_SEQ.NEXTVAL FROM DUAL 
+		</selectKey>
+		INSERT INTO CNU_COMMENT (COMMENT_NO
+								 , CONTENT
+								 , WRITER
+								 , REGDATE
+								 , BOARD_NO ) VALUES ( #{commentNo}
+								 					   , #{content}
+								 					   , #{writer}
+								 					   , SYSDATE
+								 					   , #{boardNo} )
+	</insert>
+	
+	<select id="commentList" parameterType="String" resultType="hashMap">
+		SELECT *
+		FROM CNU_COMMENT
+		WHERE BOARD_NO = #{boardNo}
+		ORDER BY REGDATE ASC
+	</select>
+	
+	<delete id="cmtDelete" parameterType="String">
+		DELETE FROM CNU_COMMENT WHERE COMMENT_NO = #{cmtNo}
+	</delete>
 </mapper>  

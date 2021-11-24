@@ -12,11 +12,12 @@ public class BoardVO {
 	private int hit;
 	private String content;
 	private String writer;
+	private String atchFileNo;
 	
 	@Override
 	public String toString() {
 		return "BoardVO [boardNo=" + boardNo + ", boardTitle=" + boardTitle + ", regdate=" + regdate + ", hit=" + hit
-				+ ", content=" + content + ", writer=" + writer + "]";
+				+ ", content=" + content + ", writer=" + writer + ", atchFileNo=" + atchFileNo + "]";
 	}
 	
 }
