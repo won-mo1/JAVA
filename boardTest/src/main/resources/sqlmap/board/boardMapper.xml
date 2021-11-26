@@ -46,13 +46,15 @@
 									,ORIGN_ATCH_FILE_NM
 									,ATCH_FILE_SIZE
 									,EXTSN
-									,ATCH_FILE) VALUES (  #{atchFileNo}
+									,ATCH_FILE
+									,FILE_COURS ) VALUES (  #{atchFileNo}
 														  ,#{sn}
 														  ,#{atchFileNm}
 														  ,#{orignAtchFileNm}
 														  ,#{atchFileSize}
 														  ,#{extsn}
 														  ,#{atchFile}
+														  ,#{fileCours}
 					 													)
 	</insert>
 	
@@ -110,4 +112,22 @@
 	<delete id="cmtDelete" parameterType="String">
 		DELETE FROM CNU_COMMENT WHERE COMMENT_NO = #{cmtNo}
 	</delete>
+	
+	<delete id="boardDelete" parameterType="String">
+		DELETE FROM CNU_BOARD WHERE BOARD_NO = #{boardNO}
+	</delete>
+	
+	<update id="hitPlus" parameterType="String">
+		UPDATE CNU_BOARD SET HIT = HIT+1 WHERE BOARD_NO = #{boardNO}
+	</update>
+	
+	<update id="boardUpdate" parameterType="kr.or.board.vo.BoardVO">
+		UPDATE CNU_BOARD SET BOARD_TITLE = #{boardTitle} , CONTENT = #{content} WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<select id="filedown" parameterType="kr.or.board.vo.AtchFileVO" resultType="kr.or.board.vo.AtchFileVO">
+		SELECT *
+		FROM CNU_ATCH_FILE
+		WHERE ATCH_FILE_NO = #{atchFileNo} AND SN = #{sn}
+	</select>
 </mapper>  

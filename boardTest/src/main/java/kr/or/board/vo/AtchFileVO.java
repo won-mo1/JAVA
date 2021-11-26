@@ -10,9 +10,23 @@ public class AtchFileVO {
 	private int atchFileSize;
 	private String extsn;
 	private String atchFile;
+	private String fileCours;
 	
 	
 	
+	
+	public String getFileCours() {
+		return fileCours;
+	}
+
+
+
+	public void setFileCours(String fileCours) {
+		this.fileCours = fileCours;
+	}
+
+
+
 	public String getAtchFileNo() {
 		return atchFileNo;
 	}
@@ -101,6 +115,6 @@ public class AtchFileVO {
 	public String toString() {
 		return "AtchFileVO [atchFileNo=" + atchFileNo + ", sn=" + sn + ", atchFileNm=" + atchFileNm
 				+ ", orignAtchFileNm=" + orignAtchFileNm + ", atchFileSize=" + atchFileSize + ", extsn=" + extsn
-				+ ", atchFile=" + atchFile + "]";
+				+ ", atchFile=" + atchFile + ", fileCours=" + fileCours + "]";
 	}
 }

@@ -68,5 +68,25 @@ public class BoardService {
 		return boardMapper.cmtDelete(cmtNo);
 	}
 
+	public int boardDelete(String boardNo) {
+		// TODO Auto-generated method stub
+		return boardMapper.boardDelete(boardNo);
+	}
+
+	public void hitPlus(String boardNo) {
+		// TODO Auto-generated method stub
+		boardMapper.hitPlus(boardNo);
+	}
+
+	public void boardUpdate(BoardVO boardVo) {
+		// TODO Auto-generated method stub
+		boardMapper.boardUpdate(boardVo);
+	}
+
+	public AtchFileVO filedown(AtchFileVO reqFileVO) {
+		// TODO Auto-generated method stub
+		return boardMapper.filedown(reqFileVO);
+	}
+
 
 }

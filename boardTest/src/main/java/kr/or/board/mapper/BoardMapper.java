@@ -28,6 +28,14 @@ public interface BoardMapper {
 	List<Map<String, Object>> commentList(String boardNo);
 
 	int cmtDelete(String cmtNo);
+
+	int boardDelete(String boardNo);
+
+	void hitPlus(String boardNo);
+
+	void boardUpdate(BoardVO boardVo);
+
+	AtchFileVO filedown(AtchFileVO reqFileVO);
 	
 	
 	

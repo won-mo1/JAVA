@@ -1,12 +1,17 @@
 package kr.or.board.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,18 +86,32 @@ public class BoardController {
 		return "redirect:/main.do";
 	}
 	
+	@ResponseBody
+	@PostMapping("/boardUpdate.do")
+	public String boardUpdate(@ModelAttribute BoardVO boardVo) {
+		
+		boardService.boardUpdate(boardVo);
+		
+		return "";
+	}
+	
 	@GetMapping("/detail/{boardNo}")
 	public String boardDetail(@PathVariable String boardNo, Model model) {
+		
+		boardService.hitPlus(boardNo);
 		
 		BoardVO boardVO = boardService.boardDetail(boardNo);
 		
 		String atchFileNo = boardVO.getAtchFileNo();
-		List<AtchFileVO> fileList = boardService.fileDetail(atchFileNo);		
 		List<Map<String, Object>> commentList = boardService.commentList(boardNo);
 		
 		model.addAttribute("boardVO", boardVO);
-		model.addAttribute("fileList", fileList);
 		model.addAttribute("commentList", commentList);
+		
+		if(atchFileNo != null) {
+			List<AtchFileVO> fileList = boardService.fileDetail(atchFileNo);		
+			model.addAttribute("fileList", fileList);
+		}
 		
 		return "board/boardDetail";
 	}
@@ -125,6 +144,49 @@ public class BoardController {
 		}
 	}
 	
+	@GetMapping("/boardDelete.do")
+	public String boardDel(@RequestParam String boardNo) {
+		
+		int cnt = boardService.boardDelete(boardNo);
+
+		return "redirect:/main.do";
+	}
+	
+	@GetMapping("/fileDownload.do")
+	public void fileDownload (@ModelAttribute AtchFileVO reqFileVO, HttpServletResponse resp) throws IOException {
+		
+		AtchFileVO fileVO = boardService.filedown(reqFileVO);
+		
+		System.out.println(fileVO);
+		
+		File file = new File(fileVO.getFileCours(), fileVO.getAtchFileNm());
+		
+		byte [] bytes = FileUtils.readFileToByteArray(file);
+		
+		resp.setContentType("application/octer-stream");
+		resp.setHeader("Content-Transfer-Encoding", "binary");
+		resp.setHeader("Content-Disposition", "attachment; filename=\"" + fileVO.getOrignAtchFileNm() + "\";");
+		
+//		try {
+//			
+//		OutputStream os = resp.getOutputStream();
+//		FileInputStream fis = new FileInputStream(file);
+//		int cnt = 0;
+//		byte[] bytess = new byte[1024];
+//		while((cnt = fis.read(bytess)) != -1) {
+//			os.write(bytess, 0, cnt);
+//		}
+//		fis.close();
+//		os.close();
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		resp.getOutputStream().write(bytes);
+		
+		
+	}
+	
 	/**
 	 * 파일 저장 및 디비저장
 	 * @param atchFile
@@ -146,10 +208,11 @@ public class BoardController {
 			fileVO.setAtchFileSize((int)file.getSize());
 			fileVO.setExtsn(extsn);
 			fileVO.setAtchFile("");
+			fileVO.setFileCours(getFolder("update"));
 			
 			boardService.atchFileUpload(fileVO);
 			
-			File newFile = new File(getFolder(), atchFileNo+sn+"-"+file.getOriginalFilename());
+			File newFile = new File(getFolder("insert"), atchFileNo+sn+"-"+file.getOriginalFilename());
 			
 			try {
 				file.transferTo(newFile);
@@ -166,9 +229,14 @@ public class BoardController {
 	 * 저장폴더생성
 	 * @return 저장경로
 	 */
-	public String getFolder() {
+	public String getFolder(String value) {
 		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("\\yyyy\\MM\\dd");
+		SimpleDateFormat format; 
+		if(value.equals("insert")) {
+			format = new SimpleDateFormat("\\yyyy\\MM\\dd\\");
+		}else {
+			format = new SimpleDateFormat("\\yyyy\\\\MM\\\\dd\\\\");
+		}
 		String path = "D:\\" + format.format(date);
 		
 		File file = new File(path);

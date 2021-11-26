@@ -27,10 +27,29 @@
 	.cmtTr{
 		border-bottom: 1px solid black;
 	}
+	.ok_wrap{
+		display: none;
+	}
+	.upINp{
+		display: none;
+		width: 100%;
+	}
 </style>
 
 <script type="text/javascript">
 	function fileDown(atchFileNo, sn){
+		console.log("들어오나체크");
+		$.ajax({
+			
+			url : "/board/fileDownload.do"
+			, type : "post"
+			, data : { atchFileNo : atchFileNo 
+					   ,sn : sn }
+			,success : function(data){
+				console.log("성공");
+			}
+			
+		});
 		
 	}
 	
@@ -76,6 +95,44 @@
 		}
 	}
 	
+	function boardDel(boardNo){
+		var con = confirm("삭제하시겠습니까?");
+		if(con){
+			location.href = "/board/boardDelete.do?boardNo="+boardNo
+		}
+	}
+	
+	function update(){
+		$(".update_wrap").css("display", "none");
+		$(".ok_wrap").css("display", "block");
+		$(".orignBoard").css("display", "none");
+		$(".upINp").css("display", "block");
+	}
+	
+	function cancle(){
+		$(".update_wrap").css("display", "block");
+		$(".ok_wrap").css("display", "none");
+		$(".orignBoard").css("display", "block");
+		$(".upINp").css("display", "none");
+	}
+	
+	function ok(boardNo){
+		
+		$.ajax({
+			
+			url : "/board/boardUpdate.do"
+			, type : "post"
+			, data : { boardTitle : $("#boardTitle").val() 
+					  ,content : $("#content").val()
+					  ,boardNo : boardNo }
+			, success : function(data){
+				location.reload();
+			}
+			
+			
+		});
+		
+	}
 </script>
 
 </head>
@@ -83,14 +140,26 @@
 	<br>
 	<br>
 	<div style="margin: 0 auto; width: 20%; text-align: center;">
-		<button>수정</button>
-		<button>삭제</button>
+		<div class="update_wrap">
+			<button onclick="update()">수정</button>
+			<button onclick="boardDel('${boardVO.boardNo }')">삭제</button>
+			<button onclick="location.href='/board/main.do'">목록</button>
+		</div>
+		
+		<div class="ok_wrap">
+			<button onclick="ok('${boardVO.boardNo }')">확인</button>
+			<button onclick="cancle()">취소</button>
+			<button onclick="location.href='/board/main.do'">목록</button>
+		</div>
 	</div>
 	<br>
 	<table border="1" style="margin: 0 auto; text-align: center;">
 		<tr>
 			<th colspan="2">제목</th>
-			<td colspan="2">${boardVO.boardTitle }</td>
+			<td colspan="2">
+				<span class="orignBoard">${boardVO.boardTitle }</span>
+				<input type="text" name="boardTitle" value="${boardVO.boardTitle }" class="upINp" id="boardTitle">
+			</td>
 		</tr>
 		<tr>
 			<th colspan="2">작성자</th>
@@ -104,20 +173,24 @@
 		</tr>
 		<tr>
 			<th colspan="2">내용</th>
-			<td colspan="2">${boardVO.content }</td>
+			<td colspan="2">
+				<span class="orignBoard">${boardVO.content }</span>
+				<input type="text" name="content" value="${boardVO.content }" class="upINp" id="content">
+			</td>
 		</tr>
 		<tr>
 			<th colspan="2">첨부파일</th>
 			<td colspan="2">
-				<c:forEach var="file" items="${fileList}">
-					<p  id="filetr" onclick="fileDown('${file.atchFileNo}', '${file.sn}')">
-						${file.orignAtchFileNm}
-					</p>
-				</c:forEach>
+				<c:if test="${boardVO.atchFileNo != null }">
+					<c:forEach var="file" items="${fileList}">
+						<a href="/board/fileDownload.do?atchFileNo=${file.atchFileNo}&sn=${file.sn}">
+								${file.orignAtchFileNm}
+						</a>
+					</c:forEach>
+				</c:if>
 			</td>
 		</tr>
 	</table>
-
 	
 	<div style="width: 40%; margin: 0 auto;">
 		<hr />
