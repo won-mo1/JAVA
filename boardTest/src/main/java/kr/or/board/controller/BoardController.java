@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -162,11 +163,13 @@ public class BoardController {
 		
 		AtchFileVO fileVO = boardService.filedown(reqFileVO);
 		
-		System.out.println(fileVO);
-		
 		File file = new File(fileVO.getFileCours(), fileVO.getAtchFileNm());
 		
 		byte [] bytes = FileUtils.readFileToByteArray(file);
+		
+//		String result = new String(bytes);
+//		
+//		byte [] bytess = result.getBytes(); 
 		
 		resp.setContentType("application/octer-stream");
 		resp.setHeader("Content-Transfer-Encoding", "binary");
@@ -188,7 +191,6 @@ public class BoardController {
 //		}
 		
 		resp.getOutputStream().write(bytes);
-		
 		
 	}
 	

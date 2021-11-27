@@ -14,6 +14,7 @@
 	<br>
 	<div style="float: left;">
 		<button onclick="location.href='boardInsert.do'">등록하기</button>
+		<button onclick="location.href='filetest.do'">파일테스트</button>
 	</div>
 	<div style="float: right;">
 		<form>
