@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.board.service.BoardService;
+import kr.or.board.util.GetLogger;
 import kr.or.board.vo.AtchFileVO;
 import kr.or.board.vo.BoardVO;
 import kr.or.board.vo.PagingVO;
@@ -34,6 +35,9 @@ import kr.or.board.vo.PagingVO;
 public class BoardController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
+	
+	private static GetLogger log = new GetLogger();
 	
 	@Autowired
 	BoardService boardService;
@@ -119,11 +123,12 @@ public class BoardController {
 	@ResponseBody
 	@PostMapping("/commentInsert.do")
 	public Object commentInsert(@RequestParam Map<String, Object>map) {
-		System.out.println(map);
 		
 		boardService.commentInsert(map);
 		String commentNo = (String) map.get("commentNo");
 		logger.warn("´ñ±Û¹øÈ£ : " + commentNo);
+		
+		log.getLog(BoardController.class, "commentInsert >> ´ñ±Û¹øÈ£ : " + commentNo);
 		
 		Date now = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

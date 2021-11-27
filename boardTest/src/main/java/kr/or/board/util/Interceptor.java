@@ -19,17 +19,17 @@ public class Interceptor extends HandlerInterceptorAdapter{
 			throws Exception {
 		// TODO Auto-generated method stub
 		
-		HttpSession session = request.getSession();
-		String main = String.valueOf(request.getRequestURI());
-		if(!main.equals("/board/main.do")) {
-			if(session.getAttribute("sessionVO") == null) {
-			
-				logger.warn("로그인세션이없음");
-				response.sendRedirect(request.getContextPath() + "/main.do");
-				return false;
-				
-			}
-		}
+//		HttpSession session = request.getSession();
+//		String main = String.valueOf(request.getRequestURI());
+//		if(!main.equals("/board/main.do")) {
+//			if(session.getAttribute("sessionVO") == null) {
+//			
+//				logger.warn("로그인세션이없음");
+//				response.sendRedirect(request.getContextPath() + "/main.do");
+//				return false;
+//				
+//			}
+//		}
 		
 		return super.preHandle(request, response, handler);
 	}
