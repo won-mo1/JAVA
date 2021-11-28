@@ -8,79 +8,133 @@
 
 
 <mapper namespace="board">
-	
-	<select id="main" resultType="kr.or.cnu.vo.BoardVO" parameterType="kr.or.cnu.vo.PagingVO">
+
+	<select id="main" resultType="kr.or.cnu.vo.BoardVO"
+		parameterType="kr.or.cnu.vo.PagingVO">
 		SELECT a.*
 		FROM
 		(SELECT ROWNUM RNUM, A.*
 		FROM
-		(   SELECT *
-		    FROM CNU_BOARD
-		    <if test="searchKeyword!=null">
-		    WHERE ${search} LIKE '%' || #{searchKeyword} || '%'
-		    </if>
-		    ORDER BY BOARD_NO DESC  ) A ) a
+		( SELECT *
+		FROM CNU_BOARD
+		<if test="searchKeyword!=null and search != ''">
+			WHERE ${search} LIKE '%${searchKeyword}%'
+		</if>
+		ORDER BY BOARD_NO DESC ) A ) a
 		WHERE RNUM BETWEEN #{start} AND #{end}
-	</select>	
-	
-	<select id="total" resultType="int" parameterType="kr.or.cnu.vo.PagingVO">
+	</select>
+
+	<select id="total" resultType="int"
+		parameterType="kr.or.cnu.vo.PagingVO">
 		SELECT COUNT(*)
 		FROM CNU_BOARD
-		<if test="searchKeyword!=null">
-			WHERE ${search} LIKE '%' || #{searchKeyword} || '%'
+		<if test="searchKeyword!=null and search != ''">
+			WHERE ${search} LIKE '%'|| #{searchKeyword} ||'%'
 		</if>
 	</select>
-	
-	
-	<select id="detail" parameterType="String" resultType="kr.or.cnu.vo.BoardVO">
+
+
+	<select id="detail" parameterType="String"
+		resultType="kr.or.cnu.vo.BoardVO">
 		SELECT *
 		FROM CNU_BOARD
 		WHERE BOARD_NO = #{boardNo}
 	</select>
-	
+
 	<insert id="commentInsert" parameterType="HashMap">
-		INSERT INTO CNU_COMMENT (COMMENT_NO
-                        ,CONTENT
-                        ,WRITER
-                        ,REGDATE
-                        ,BOARD_NO) VALUES ( 'COM' || COMMNET_SEQ.NEXTVAL
-                                            , #{comment}
-                                            , #{writer}
-                                            , SYSDATE
-                                            , #{boardNo} )
+		INSERT INTO CNU_COMMENT
+		(COMMENT_NO
+		,CONTENT
+		,WRITER
+		,REGDATE
+		,BOARD_NO) VALUES ( 'COM' || COMMNET_SEQ.NEXTVAL
+		, #{comment}
+		, #{writer}
+		, SYSDATE
+		, #{boardNo} )
 	</insert>
-	
+
 	<select id="atchFileNo" resultType="String">
-		SELECT 'FILE' || ATCH_FILE_SEQ.NEXTVAL
+		SELECT 'FILE' ||
+		ATCH_FILE_SEQ.NEXTVAL
 		FROM DUAL
 	</select>
-	
+
 	<insert id="atchFile" parameterType="kr.or.cnu.vo.AtchFileVO">
 		INSERT INTO cnu_atch_file (
-									    ATCH_FILE_NO,
-									    SN,
-									    ATCH_FILE_NM,
-									    ORIGN_ATCH_FILE_NM,
-									    ATCH_FILE_SIZE,
-									    EXTSN,
-									    ATCH_FILE
-													) VALUES (
-													    #{atchFileNo}
-													    , #{sn}
-													    , #{atchFileNm}
-													    , #{orignAtchFileNm}
-													    , #{atchFileSize}
-													    , #{extsn}
-													    , #{atchFile}
-													)
+		ATCH_FILE_NO,
+		SN,
+		ATCH_FILE_NM,
+		ORIGN_ATCH_FILE_NM,
+		ATCH_FILE_SIZE,
+		EXTSN,
+		ATCH_FILE
+		) VALUES (
+		#{atchFileNo}
+		, #{sn}
+		, #{atchFileNm}
+		, #{orignAtchFileNm}
+		, #{atchFileSize}
+		, #{extsn}
+		, #{atchFile}
+		)
 	</insert>
-	
-	<select id="commentList" parameterType="String" resultType="HashMap">
+
+	<select id="commentList" parameterType="String"
+		resultType="HashMap">
 		SELECT * FROM CNU_COMMENT WHERE BOARD_NO = #{boardNo}
 	</select>
-	
+
 	<delete id="commentDelete" parameterType="HashMap">
-		DELETE FROM CNU_COMMENT WHERE COMMENT_NO = #{commentNo}
+		DELETE FROM CNU_COMMENT
+		WHERE COMMENT_NO = #{commentNo}
 	</delete>
-	
+
+	<insert id="fileInsert" parameterType="kr.or.cnu.vo.AtchFileVO">
+		<selectKey keyProperty="atchFileNo" resultType="java.lang.String" order="BEFORE">
+		    SELECT 'FILE' || ATCH_FILE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO cnu_atch_file (
+									atch_file_no,
+									sn,
+									atch_file_nm,
+									orign_atch_file_nm,
+									atch_file_size,
+									extsn,
+									file_cours
+													) VALUES (
+																	#{atchFileNo},
+																	#{sn},
+																	#{atchFileNm},
+																	#{orignAtchFileNm},
+																	#{atchFileSize},
+																	#{extsn},
+																	#{fileCours}
+																					)
+	</insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </mapper>

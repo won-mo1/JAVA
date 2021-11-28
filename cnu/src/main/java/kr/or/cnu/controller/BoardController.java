@@ -136,16 +136,32 @@ public class BoardController {
 			if(!file.exists()) {
 				file.mkdirs();
 			}
-		
+			AtchFileVO atchFileVO = new AtchFileVO();
+			int sn = 0;
+			
 			for(MultipartFile upload : uploadFile) {
+				
 				UUID uuid = UUID.randomUUID();
 				String atchFileNm = uuid + "-" + upload.getOriginalFilename();
 				
 				//데이터베이스에 넣을 파일에대한 정보들 (+경로, 확장자, 저장이름, 순번)
-				System.out.println(upload.getOriginalFilename()); //파일이름
-				System.out.println(upload.getSize());  //파일용량
+				atchFileVO.setSn(sn); //순번
+				atchFileVO.setAtchFileNm(atchFileNm); // 저장 파일이름
+				atchFileVO.setOrignAtchFileNm(upload.getOriginalFilename()); //파일이름
+				atchFileVO.setAtchFileSize(String.valueOf(upload.getSize())); //파일용량
+				atchFileVO.setFileCours(path); // 저장경로
+				//확장자
+				int index = upload.getOriginalFilename().split("[.]").length;
+				String extsn = upload.getOriginalFilename().split("[.]")[index - 1];
+				
+				atchFileVO.setExtsn(extsn);
+				
+				boardService.fileInsert(atchFileVO);
+				
+				System.out.println(atchFileVO);
 				
 				File saveFile = new File(path, atchFileNm);
+				sn++;
 				
 				try {
 					upload.transferTo(saveFile);
@@ -191,7 +207,7 @@ public class BoardController {
 			fileVo.setSn(forIndex);
 			fileVo.setAtchFileNm(atchFileNm);
 			fileVo.setOrignAtchFileNm(orignAtchFileNm);
-			fileVo.setAtchFileSize(atchFileSize);
+//			fileVo.setAtchFileSize(atchFileSize);
 			fileVo.setExtsn(extsn);
 			fileVo.setAtchFile("");
 			

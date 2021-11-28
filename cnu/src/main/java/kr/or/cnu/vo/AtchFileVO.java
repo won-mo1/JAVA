@@ -9,15 +9,16 @@ public class AtchFileVO {
 	private int sn;
 	private String atchFileNm;
 	private String orignAtchFileNm;
-	private long atchFileSize;
+	private String atchFileSize;
 	private String extsn;
 	private String atchFile;
+	private String fileCours;
 	
 	@Override
 	public String toString() {
 		return "AtchFileVO [atchFileNo=" + atchFileNo + ", sn=" + sn + ", atchFileNm=" + atchFileNm
 				+ ", orignAtchFileNm=" + orignAtchFileNm + ", atchFileSize=" + atchFileSize + ", extsn=" + extsn
-				+ ", atchFile=" + atchFile + "]";
+				+ ", atchFile=" + atchFile + ", fileCours=" + fileCours + "]";
 	}
 	
 }

@@ -55,4 +55,9 @@ public class BoardService {
 		return boardDao.commentDelete(map);
 	}
 
+	public void fileInsert(AtchFileVO atchFileVO) {
+		// TODO Auto-generated method stub
+		boardDao.fileInsert(atchFileVO);
+	}
+
 }

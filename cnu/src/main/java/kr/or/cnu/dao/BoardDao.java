@@ -57,5 +57,26 @@ public class BoardDao {
 		// TODO Auto-generated method stub
 		return sessionTemplate.delete("board.commentDelete", map);
 	}
+
+	public void fileInsert(AtchFileVO atchFileVO) {
+		// TODO Auto-generated method stub
+		sessionTemplate.insert("board.fileInsert", atchFileVO);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
